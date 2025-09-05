@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>All Rent Payments</h2>
+<table class="table">
+    <tr>
+        <th>Tenant</th>
+        <th>Flat</th>
+        <th>Month</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Method</th>
+        <th>Transaction ID</th>
+    </tr>
+    {% for p in payments %}
+    <tr>
+        <td>{{ p.tenant.username }}</td>
+        <td>{{ p.listing.title }}</td>
+        <td>{{ p.month|date:"F Y" }}</td>
+        <td>{{ p.amount }} BDT</td>
+        <td>{{ p.status }}</td>
+        <td>{{ p.payment_method }}</td>
+        <td>{{ p.transaction_id }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

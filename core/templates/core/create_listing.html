@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Create a New Listing</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <!-- 🎥 Virtual Tour YouTube Link -->
+    <div class="form-group mb-3">
+        {{ form.virtual_tour_video.label_tag }}
+        {{ form.virtual_tour_video }}
+        <small class="form-text text-muted">Paste a YouTube link (e.g. https://www.youtube.com/watch?v=abc123)</small>
+    </div>
+
+    <h4>Set Flat Location</h4>
+    <input type="text" id="autocomplete" placeholder="Search location" class="form-control mb-2">
+    <div id="map" style="height: 400px;" class="mb-3"></div>
+
+    <input type="hidden" name="latitude" id="id_latitude">
+    <input type="hidden" name="longitude" id="id_longitude">
+
+    <h4>Upload Images</h4>
+    {{ formset.management_form }}
+    {% for form in formset %}
+        <div class="border p-2 mb-2">
+            {{ form.image.label_tag }} {{ form.image }}
+            {{ form.is_cover.label_tag }} {{ form.is_cover }}
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success">Save Listing</button>
+</form>
+
+<!-- Google Maps API (replace with your own API key) -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_l2EtE-ioE3At_rH2QfrKYGr8Vgaavw0&libraries=places"></script>
+<script>
+let map;
+function initMap() {
+    const dhaka = { lat: 23.8103, lng: 90.4125 };
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: dhaka,
+        zoom: 12,
+    });
+
+    const input = document.getElementById("autocomplete");
+    const searchBox = new google.maps.places.SearchBox(input);
+    let marker = new google.maps.Marker({ map: map });
+
+    searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+        if (places.length == 0) return;
+
+        const place = places[0];
+        map.setCenter(place.geometry.location);
+        marker.setPosition(place.geometry.location);
+
+        // Set coordinates to form
+        document.getElementById("id_latitude").value = place.geometry.location.lat();
+        document.getElementById("id_longitude").value = place.geometry.location.lng();
+    });
+
+    // Support click to select location
+    map.addListener("click", function (event) {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        marker.setPosition(event.latLng);
+        document.getElementById("id_latitude").value = lat;
+        document.getElementById("id_longitude").value = lng;
+    });
+}
+window.initMap = initMap;
+</script>
+<script>
+    window.addEventListener('load', initMap);
+</script>
+{% endblock %}

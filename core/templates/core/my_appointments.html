@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>My Appointments</h2>
+<ul>
+    {% for a in appointments %}
+        <li>{{ a.listing.title }} on {{ a.date }} at {{ a.time }} - {{ a.status }}</li>
+    {% empty %}
+        <p>No appointments booked.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

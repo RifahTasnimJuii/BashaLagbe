@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>My Rent History</h2>
+<table class="table">
+    <tr>
+        <th>Month</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Method</th>
+        <th>Transaction ID</th>
+        <th>Paid On</th>
+    </tr>
+    {% for p in payments %}
+    <tr>
+        <td>{{ p.month|date:"F Y" }}</td>
+        <td>{{ p.amount }} BDT</td>
+        <td>{{ p.status }}</td>
+        <td>{{ p.payment_method }}</td>
+        <td>{{ p.transaction_id }}</td>
+        <td>{{ p.paid_on|date:"d M Y" }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

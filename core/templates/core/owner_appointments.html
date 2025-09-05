@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Appointments for Your Listings</h2>
+<ul>
+    {% for a in appointments %}
+        <li>
+            {{ a.user.username }} → {{ a.listing.title }}  
+            📅 {{ a.date }} at {{ a.time }}  
+            Status: {{ a.status }}
+        </li>
+    {% empty %}
+        <p>No appointments yet.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

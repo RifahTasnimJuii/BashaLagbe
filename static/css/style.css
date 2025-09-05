@@ -1,0 +1,27 @@
+/* 🌙 Dark Mode Base */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+.dark-mode .form-control,
+.dark-mode .form-select {
+    background-color: #222;
+    color: #fff;
+    border-color: #555;
+}
+
+.dark-mode .btn-primary {
+    background-color: #444;
+    border-color: #555;
+}
+
+.dark-mode .card-text,
+.dark-mode .card-title {
+    color: #ddd;
+}

@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- 🏠 Cover Image -->
+            {% if listing.cover_image %}
+                <img src="{{ listing.cover_image.image.url }}" class="img-fluid rounded mb-3" alt="{{ listing.title }}">
+            {% endif %}
+
+            <h2>{{ listing.title }}</h2>
+            <p class="text-muted">📍 {{ listing.area }}</p>
+
+            <!-- 📊 Flat Details -->
+            <ul class="list-group mb-3">
+                <li class="list-group-item">💰 Rent: {{ listing.price }} BDT</li>
+                <li class="list-group-item">🛏️ Rooms: {{ listing.rooms }}</li>
+                <li class="list-group-item">📅 Available From: {{ listing.available_from }}</li>
+                <li class="list-group-item">
+                    {% if listing.family_friendly %}
+                        👨‍👩‍👧 Family Friendly
+                    {% else %}
+                        🧍 Single Allowed
+                    {% endif %}
+                </li>
+                <li class="list-group-item">
+                    {% if listing.owner.userprofile.is_verified %}
+                        ✅ Verified Owner
+                    {% else %}
+                        ❌ Not Verified Owner
+                    {% endif %}
+                </li>
+            </ul>
+
+            <!-- 📹 Virtual Tour -->
+            {% if listing.virtual_tour_video %}
+                <h4>🎥 Virtual Tour</h4>
+                <div class="ratio ratio-16x9 mb-3">
+                    <iframe width="560" height="315"
+                        src="https://www.youtube.com/embed/{{ listing.virtual_tour_video|cut:'https://www.youtube.com/watch?v=' }}"
+                        title="Virtual Tour" frameborder="0" allowfullscreen>
+                    </iframe>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- 📌 Actions Sidebar -->
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+                <h5 class="mb-3">Actions</h5>
+                <a href="{% url 'book_appointment' listing.id %}" class="btn btn-outline-primary mb-2 w-100">📅 Book Visit</a>
+                <a href="{% url 'sign_agreement' listing.id %}" class="btn btn-outline-success mb-2 w-100">🖊️ Sign Agreement</a>
+                <a href="{% url 'pay_rent' listing.id %}" class="btn btn-outline-dark mb-2 w-100">💳 Pay Rent</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

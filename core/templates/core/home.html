@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Available Flats</h2>
+
+<!-- 🔍 Search & Filter Form -->
+<form method="GET" class="row g-2 mb-4">
+    <div class="col-md-3">
+        <input type="text" name="q" class="form-control" placeholder="Search by title/keyword" value="{{ request.GET.q }}">
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="area" class="form-control" placeholder="Area name" value="{{ request.GET.area }}">
+    </div>
+    <div class="col-md-2">
+        <input type="number" name="min_rent" class="form-control" placeholder="Min Rent" value="{{ request.GET.min_rent }}">
+    </div>
+    <div class="col-md-2">
+        <input type="number" name="max_rent" class="form-control" placeholder="Max Rent" value="{{ request.GET.max_rent }}">
+    </div>
+    <div class="col-md-1">
+        <input type="number" name="rooms" class="form-control" placeholder="Rooms" value="{{ request.GET.rooms }}">
+    </div>
+    <div class="col-md-2">
+        <input type="date" name="available_from" class="form-control" placeholder="Available by" value="{{ request.GET.available_from }}">
+    </div>
+    <div class="col-md-2">
+        <select name="family" class="form-select">
+            <option value="">Family/Single</option>
+            <option value="yes" {% if request.GET.family == 'yes' %}selected{% endif %}>Family Only</option>
+            <option value="no" {% if request.GET.family == 'no' %}selected{% endif %}>Single Allowed</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+<!-- 🏠 Listings -->
+<div class="row">
+    {% for listing in listings %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                {% if listing.cover_image %}
+                    <img src="{{ listing.cover_image.image.url }}" class="card-img-top" alt="Flat Image">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ listing.title }}</h5>
+                    <p class="card-text">Rent: {{ listing.price }} BDT</p>
+                    <p class="card-text">Location: {{ listing.area }}</p>
+                    <p class="card-text">Rooms: {{ listing.rooms }}</p>
+                    <p class="card-text">Available: {{ listing.available_from }}</p>
+                    <p class="card-text small text-muted">
+                        {% if listing.family_friendly %}👨‍👩‍👧 Family Friendly{% else %}🧍 Single Allowed{% endif %}
+                    </p>
+
+                    <!-- ✅ Verification Badge -->
+                    <p class="text-muted">
+                        {% if listing.owner.userprofile.is_verified %}
+                            ✅ Verified Owner
+                        {% else %}
+                            ❌ Not Verified
+                        {% endif %}
+                    </p>
+
+                    <a href="{% url 'book_appointment' listing.id %}" class="btn btn-outline-primary btn-sm">📅 Book Visit</a>
+                    <a href="{% url 'sign_agreement' listing.id %}" class="btn btn-outline-success btn-sm">🖊️ Sign Agreement</a>
+                    <a href="{% url 'pay_rent' listing.id %}" class="btn btn-outline-success btn-sm">💳 Pay Rent</a>
+
+                    {% if listing.virtual_tour_video %}
+                        <div class="ratio ratio-16x9 mt-2">
+                            <iframe width="560" height="315"
+                                src="https://www.youtube.com/embed/{{ listing.virtual_tour_video|cut:'https://www.youtube.com/watch?v=' }}"
+                                title="Virtual Tour" frameborder="0" allowfullscreen>
+                            </iframe>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No listings found. Try changing filters.</p>
+    {% endfor %}
+</div>
+{% endblock %}
